@@ -1,6 +1,2 @@
-samples:
-    - species1
-    - species2
-    - species2
+samples: "data/data.csv"
         
-   
