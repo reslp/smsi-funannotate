@@ -8,8 +8,8 @@ __default__:
    hint: nomultithread
    partition: mem_0128
    qos: devel_0128
-   output: /home/lv71312/reslp/projects/monos_fun/logs/slurm-%j.out
-   error: /home/lv71312/reslp/projects/monos_fun/logs/slurm-%j.err
+   output: /home/lv71312/reslp/projects/monos_fun/log/slurm-%j.out
+   error: /home/lv71312/reslp/projects/monos_fun/log/slurm-%j.err
 clean:
    time: 00:10:00
    ntasks-per-node: 1

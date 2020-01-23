@@ -1,0 +1,27 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	sort
+	1
+
+[Thu Jan 23 16:17:14 2020]
+rule sort:
+    input: results/Trapelia_coarctata/Trapelia_coarctata_cleaned.fas
+    output: results/Trapelia_coarctata/Trapelia_coarctata_sorted.fas
+    jobid: 0
+    wildcards: samples=Trapelia_coarctata, sample=Trapelia_coarctata
+
+
+                cd results/Trapelia_coarctata
+                funannotate sort -i ../../results/Trapelia_coarctata/Trapelia_coarctata_cleaned.fas -o ../../results/Trapelia_coarctata/Trapelia_coarctata_sorted.fas -b tra_coa
+		
+Activating singularity image /home/lv71312/reslp/projects/monos_fun/.snakemake/singularity/0a21f40bee861ce147ebbdcd0a3fe17f.simg
+405 contigs records loaded
+Sorting and renaming contig headers
+405 contigs saved to file
+[Thu Jan 23 16:17:17 2020]
+Finished job 0.
+1 of 1 steps (100%) done

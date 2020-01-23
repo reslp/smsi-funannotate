@@ -13,9 +13,12 @@ def get_assembly_path(wildcards):
 # this is to get the assembly path information for the sample from the CSV file
 	return sample_data.loc[wildcards.sample, ["assembly_path"]].to_list()
 
+def get_contig_prefix(wildcards):
+	return sample_data.loc[wildcards.sample, ["contig_prefix"]].to_list()
+
 rule all:
 	input:
-		expand("results/{name}/{name}_cleaned.fas", name=sample_data.index.tolist())
+		expand("results/{name}/{name}_sorted.fas", name=sample_data.index.tolist())
 
 rule clean:
 	input:
@@ -35,3 +38,18 @@ rule clean:
 		cd results/{params.folder}
 		funannotate clean -i ../../{input.assembly} -o ../../{output} 2> ../../{log}
 		"""
+
+rule sort:
+	input:
+		assembly = rules.clean.output
+	output:
+		"results/{samples}/{sample}_sorted.fas"
+	params:
+		folder = "{sample}",
+		contig_prefix = get_contig_prefix
+	shell:
+		"""
+                cd results/{params.folder}
+                funannotate sort -i ../../{input.assembly} -o ../../{output} -b {params.contig_prefix}
+		"""
+
