@@ -1,4 +1,4 @@
 sample	assembly_path	prefix
+Trapelia_coarctata	data/assemblies/Tra_coa_genomeV2.fasta	tra_coa_pred
 Agyrium_rufum	data/assemblies/Agy_ruf_genomeV2.fasta	agy_ruf_pred
 Lobaria_pulmonaria	data/assemblies/Lobpul1_AssemblyScaffolds.fasta	lob_pul_pred
-Trapelia_coarctata	data/assemblies/Tra_coa_genomeV2.fasta	tra_coa_pred
