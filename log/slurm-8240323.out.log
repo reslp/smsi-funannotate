@@ -1,0 +1,37 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 32
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	clean
+	1
+
+[Thu Jan 23 14:04:55 2020]
+rule clean:
+    input: data/assemblies/Tra_coa_genomeV2.fasta
+    output: results/Trapelia_coarctata/Trapelia_coarctata_cleaned.fas
+    log: log/Trapelia_coarctata_clean.log
+    jobid: 0
+    wildcards: sample=Trapelia_coarctata
+
+
+		if [[ ! -d results/Trapelia_coarctata ]]
+		then
+			mkdir results/Trapelia_coarctata
+		fi
+		cd results/Trapelia_coarctata
+		funannotate clean -i ../../data/assemblies/Tra_coa_genomeV2.fasta -o ../../results/Trapelia_coarctata/Trapelia_coarctata_cleaned.fas 2> ../../log/Trapelia_coarctata_clean.log
+		
+Activating singularity image /home/lv71312/reslp/projects/monos_fun/.snakemake/singularity/0a21f40bee861ce147ebbdcd0a3fe17f.simg
+-----------------------------------------------
+714 input contigs, 407 larger than 500 bp, N50 is 275,791 bp
+Checking duplication of 370 contigs shorter than N50
+-----------------------------------------------
+NODE_406_length_515_cov_3587.27_ID_164752 appears duplicated: 100% identity over 95% of the contig. contig length: 515
+NODE_404_length_531_cov_3430.25_ID_164118 appears duplicated: 100% identity over 95% of the contig. contig length: 531
+-----------------------------------------------
+714 input contigs; 407 larger than 500 bp; 2 duplicated; 405 written to file
+[Thu Jan 23 14:09:47 2020]
+Finished job 0.
+1 of 1 steps (100%) done
