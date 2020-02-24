@@ -1,7 +1,6 @@
-# Running the snakemake funannotate pipeline on the VSC
+# A containerized snakemake funannotate pipeline 
 
 funannotate -> snakemake -> singularity
-
 
 
 This snakemake pipeline implements funannotate for use on SLURM based clusters. Currently it is set up to work on the VSC (Vienna Scientific Cluster). It should be relatively simple to adopt it on other SLURM clusters or even on cluster which use a different jobs scheduling system such as SGE.
