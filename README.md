@@ -75,6 +75,9 @@ First make sure that your data.csv file is set up correctly. Review the provided
 Make sure to configure the cluster parameters currectly (max_walltime, qos, etc.). This can be very different from the example provided in the data directory.
 
 
+Get a personalized GenBank template [https://submit.ncbi.nlm.nih.gov/genbank/template/submission/](https://submit.ncbi.nlm.nih.gov/genbank/template/submission/) and place it in data/genbank_template.txt. 
+
+
 ## **Run the pipeline**
 
 A dry run can be started with:
