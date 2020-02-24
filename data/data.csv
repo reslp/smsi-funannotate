@@ -1,2 +1,3 @@
-sample	assembly_path	gene_prefix	contig_prefix
-Trapelia_coarctata	data/assemblies/Tra_coa_genomeV2.fasta	tra_coa_pred	tra_coa
+sample	assembly_path	gene_prefix	contig_prefix	premasked
+Kapentagyrus_tanganicanus	data/assemblies/monos/Ktan_gapClosed.fa	kap_tan_pred	kap_tan	no
+Gyrodactylus_teuchis	data/assemblies/monos/teu123_CELERA.scf.min200.fasta	gyr_teu_pred	gyr_teu	no     

@@ -1,3 +1,4 @@
 .snakemake/
 data/external/
 data/database/
+.DS_Store
