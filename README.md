@@ -16,7 +16,7 @@ To make it work, a few things net to be setup beforehand:
 
 ## Rulegraph
 
-![https://github.com/reslp/smsi_funannotate/blob/master/rulgraph.png](https://github.com/reslp/smsi_funannotate/blob/master/rulegraph.png | height=500)
+<img src="https://github.com/reslp/smsi_funannotate/blob/master/rulegraph.png" eight="500">
 
 ## **Setup of funannotate database**
 
