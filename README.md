@@ -16,7 +16,7 @@ To make it work, a few things net to be setup beforehand:
 
 ## Rulegraph
 
-![https://github.com/reslp/smsi_funannotate/blob/master/rulgraph.png](https://github.com/reslp/smsi_funannotate/blob/master/rulegraph.png)
+![https://github.com/reslp/smsi_funannotate/blob/master/rulgraph.png](https://github.com/reslp/smsi_funannotate/blob/master/rulegraph.png | height=500)
 
 ## **Setup of funannotate database**
 
@@ -98,7 +98,7 @@ A full run (incl. submission) like this:
 
 	./submit.sh
 	
-##**Run the pipeline without SLURM on a single machine:**
+## **Run the pipeline without SLURM on a single machine:**
 
 This should run the pipeline on a single machine without SLURM job management present.
 
