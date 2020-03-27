@@ -37,4 +37,7 @@ annotate:
    J: anno
    hint: multithread
    ntasks-per-node: 48
-
+compare:
+   J: compare
+   hint: multithread
+   ntasks-per-node: 48

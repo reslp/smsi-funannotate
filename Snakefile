@@ -20,13 +20,20 @@ def get_contig_prefix(wildcards):
 def get_premasked_state(wildcards):
 	return sample_data.loc[wildcards.sample, ["premasked"]].to_list()[-1]
 
+def get_all_samples(wildcards):
+	sam = sample_data["contig_prefix"].tolist()
+	sam = [sample+"s" for sample in sam].join()
+	return sam 
+
 rule all:
 	input:
 		#expand("results/{name}/{name}_remote.done", name=sample_data.index.tolist()),
 		#expand("results/{name}/{name}_iprscan.done", name=sample_data.index.tolist()),
 		#expand("results/{name}/{name}_eggnog.done", name=sample_data.index.tolist()),
-		expand("results/{name}/{name}_tarpredict.done", name=sample_data.index.tolist()),
-		expand("results/{name}/{name}_annotate.done", name=sample_data.index.tolist())
+		#expand("results/{name}/{name}_tarpredict.done", name=sample_data.index.tolist()),
+		expand("results/{name}/{name}_predict.done", name=sample_data.index.tolist()),
+		expand("results/{name}/{name}_annotate.done", name=sample_data.index.tolist()),
+		"results/funannotate_compare.done"
 
 rule clean:
 	input:
@@ -166,7 +173,7 @@ rule eggnog:
 	log:
 		"log/{sample}_eggnog.log"
 	singularity:
-		"docker://reslp/eggnog-mapper"
+		"docker://reslp/eggnog-mapper:1.0.3"
 	threads: 16
 	shell:
 		"""
@@ -193,4 +200,29 @@ rule annotate:
 		touch ../../{output}
 		funannotate annotate -i {params.pred_folder}_preds --sbt ../../data/genbank_template.txt --eggnog {params.pred_folder}_preds/eggnog_results.emapper.annotations --busco_db metazoa --cpus {threads} >& ../../{log}
 		#funannotate annotate -i {params.pred_folder}_preds --sbt ../../data/genbank_template.txt --cpus {threads} >& ../../{log}
+		"""
+
+species_names, preddirs = glob_wildcards("results/{sample}/{preddir}_preds")
+# funannotate compare does not allow / charcters in the output folder
+# therefore the folder has to be moved manually to the results folder.
+rule compare:
+	input:
+		checkpoint=expand("results/{sam}/{sam}_annotate.done", sam=sample_data.index.tolist()),
+		folders = expand("results/{species_name}/{preddir}_preds", zip, species_name=species_names, preddir=preddirs) 
+	output:
+		checkpoint = "results/funannotate_compare.done",
+		dir = directory("results/funannotate_compare/")
+	params:
+		samples = expand("results/{sam}", sam=sample_data["contig_prefix"].tolist())
+	singularity:
+		"docker://reslp/funannotate:experimental"
+	log:
+		"log/funannotate_compare.log"
+	threads: 16
+	shell:
+		"""
+		funannotate compare --cpus {threads} --num_orthos 10 -i {input.folders} >& {log}
+		mv funannotate_compare results/
+		mv funannotate_compare.tar.gz results/
+		touch {output.checkpoint}
 		"""
