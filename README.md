@@ -58,6 +58,8 @@ Tested with Version 4.
 
 Download interproscan from [www.ebi.ac.uk/interpro/download/](https://www.ebi.ac.uk/interpro/download/). Place it in the folder data/external/interproscan-versionXXX. Make sure the path in the Snakefile points to the correct directory. InterProScan is frequently updated and your version could be different from the one specifid in the Snakefile.
 
+IMPORTANT: Newer version os Interproscan are not compatible with funannotate <1.7.3.
+
 Tested with Version 5.39-77.0
 
 
