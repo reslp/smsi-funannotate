@@ -1,4 +1,4 @@
-singularity: "docker://reslp/funannotate:latest"
+singularity: "docker://reslp/funannotate:1.7.2"
 
 configfile: "data/config.yaml"
 
@@ -30,7 +30,7 @@ rule all:
 		#expand("results/{name}/{name}_remote.done", name=sample_data.index.tolist()),
 		#expand("results/{name}/{name}_iprscan.done", name=sample_data.index.tolist()),
 		#expand("results/{name}/{name}_eggnog.done", name=sample_data.index.tolist()),
-		#expand("results/{name}/{name}_tarpredict.done", name=sample_data.index.tolist()),
+		expand("results/{name}/{name}_tarpredict.done", name=sample_data.index.tolist()),
 		expand("results/{name}/{name}_predict.done", name=sample_data.index.tolist()),
 		expand("results/{name}/{name}_annotate.done", name=sample_data.index.tolist()),
 		"results/funannotate_compare.done"
@@ -44,7 +44,8 @@ rule clean:
 	log:
 		"log/{sample}_clean.log"
 	params:
-		folder = "{sample}"
+		folder = "{sample}",
+		minlen = config["clean"]["minlen"]
 	shell:
 		"""
 		if [[ ! -d results/{params.folder} ]]
@@ -52,7 +53,7 @@ rule clean:
 			mkdir results/{params.folder}
 		fi
 		cd results/{params.folder}
-		funannotate clean -i ../../{input.assembly} -o ../../{output} --minlen 5000 2> ../../{log}
+		funannotate clean -i ../../{input.assembly} -o ../../{output} --minlen {params.minlen}  2> ../../{log}
 		"""
 
 rule sort:
@@ -76,14 +77,16 @@ rule mask:
 		"results/{sample}/{sample}_masked.fas"
 	params:
 		folder = "{sample}",
-		premasked = get_premasked_state
+		premasked = get_premasked_state,
+		method = config["mask"]["method"]
+	threads: config["mask"]["threads"]
 	shell:
 		"""
 		if [[ "{params.premasked}" == "yes" ]]; then
 			cp {input.assembly} {output}
 		else
 			cd results/{params.folder}
-			funannotate mask -i ../../{input.assembly} -o ../../{output} -m repeatmasker
+			funannotate mask -i ../../{input.assembly} -o ../../{output} -m {params.method} --cpus {threads}
 		fi
 		"""	
 
@@ -97,9 +100,13 @@ rule predict:
 		folder = "{sample}",
 		pred_folder = get_contig_prefix,
 		sample_name = "{sample}",
+		organism = config["predict"]["organism"],
+		busco_seed_species = config["predict"]["busco_seed_species"],
+		ploidy = config["predict"]["ploidy"],
+		busco_db = config["predict"]["busco_db"]
 	log:
 		"log/{sample}_predict.log"
-	threads: 16
+	threads: config["predict"]["threads"] 
 	shell:
 		"""
 		if [[ ! -d results/{params.folder} ]]
@@ -107,7 +114,7 @@ rule predict:
 			mkdir results/{params.folder}
 		fi
 		cd results/{params.folder}
-		funannotate predict -i ../../{input.assembly} -o {params.pred_folder}_preds -s {params.sample_name} --name {params.pred_folder}_pred --optimize_augustus --cpus {threads} --busco_db metazoa --organism other --busco_seed_species schistosoma --ploidy 2 >& ../../{log}
+		funannotate predict -i ../../{input.assembly} -o {params.pred_folder}_preds -s {params.sample_name} --name {params.pred_folder}_pred --optimize_augustus --cpus {threads} --busco_db {params.busco_db} --organism {params.organism} --busco_seed_species {params.busco_seed_species} --ploidy {params.ploidy} >& ../../{log}
 		touch ../../{output}
 		""" 
 
@@ -143,7 +150,8 @@ rule iprscan:
 	shell:
 		"""
 		cd results/{params.folder}
-		funannotate iprscan --iprscan_path /data/external/interproscan-5.39-77.0/interproscan.sh -i ../../results/{params.folder}/{params.pred_folder}_preds -m local -c 2 >& ../../{log}
+		#funannotate iprscan --iprscan_path /data/external/interproscan-5.33-72.0/interproscan.sh -i ../../results/{params.folder}/{params.pred_folder}_preds -m local -c 2 >& ../../{log}
+		/data/external/interproscan-5.39-77.0/interproscan.sh -i ../../results/{params.folder}/{params.pred_folder}_preds/predict_results/{params.folder}.proteins.fa -o ../../results/{params.folder}/{params.pred_folder}_preds/annotate_misc/iprscan.xml -f XML -goterms -pa >& ../../{log}
 		touch ../../{output}
 		"""
 rule remote:
@@ -153,13 +161,15 @@ rule remote:
 		"results/{sample}/{sample}_remote.done"
 	params:
 		folder="{sample}",
-		pred_folder=get_contig_prefix
+		pred_folder=get_contig_prefix,
+		methods = config["remote"]["methods"],
+		email = config["remote"]["email"]
 	log:
 		"log/{sample}_remote.log"
 	shell:
 		"""
 		cd results/{params.folder}
-		funannotate remote -i {params.pred_folder}_preds -m phobius -e philipp.resl@uni-graz.at >& ../../{log}
+		funannotate remote -i {params.pred_folder}_preds -m {params.methods} -e {params.email} >& ../../{log}
 		touch ../../{output}
 		"""
 rule eggnog:
@@ -174,7 +184,7 @@ rule eggnog:
 		"log/{sample}_eggnog.log"
 	singularity:
 		"docker://reslp/eggnog-mapper:1.0.3"
-	threads: 16
+	threads: config["eggnog"]["threads"]
 	shell:
 		"""
 		cd results/{params.folder}
@@ -193,7 +203,7 @@ rule annotate:
 		pred_folder=get_contig_prefix
 	log:
 		"log/{sample}_annotate.log"
-	threads: 16
+	threads: config["annotate"]["threads"]
 	shell:
 		"""
 		cd results/{params.folder}
@@ -205,24 +215,104 @@ rule annotate:
 species_names, preddirs = glob_wildcards("results/{sample}/{preddir}_preds")
 # funannotate compare does not allow / charcters in the output folder
 # therefore the folder has to be moved manually to the results folder.
-rule compare:
-	input:
-		checkpoint=expand("results/{sam}/{sam}_annotate.done", sam=sample_data.index.tolist()),
-		folders = expand("results/{species_name}/{preddir}_preds", zip, species_name=species_names, preddir=preddirs) 
-	output:
-		checkpoint = "results/funannotate_compare.done",
-		dir = directory("results/funannotate_compare/")
-	params:
-		samples = expand("results/{sam}", sam=sample_data["contig_prefix"].tolist())
-	singularity:
-		"docker://reslp/funannotate:experimental"
-	log:
-		"log/funannotate_compare.log"
-	threads: 16
-	shell:
-		"""
-		funannotate compare --cpus {threads} --num_orthos 10 -i {input.folders} >& {log}
-		mv funannotate_compare results/
-		mv funannotate_compare.tar.gz results/
-		touch {output.checkpoint}
-		"""
+if config["compare"]["phylogeny"] == "yes" or config["compare"]["histograms"] == "yes":
+	rule compare:
+                input:
+                        checkpoint=expand("results/{sam}/{sam}_annotate.done", sam=sample_data.index.tolist()),
+                        folders = expand("results/{species_name}/{preddir}_preds", zip, species_name=species_names, preddir=preddirs)
+                output:
+                        checkpoint = "results/funannotate_compare.done",
+                        dir = directory("results/funannotate_compare/")
+                params:
+                        samples = expand("results/{sam}", sam=sample_data["contig_prefix"].tolist()),
+                        num_orthos = config["compare"]["num_orthos"],
+                        ml_method = config["compare"]["ml_method"]
+                singularity:
+                        "docker://reslp/funannotate:1.7.2"
+                log:
+                        "log/funannotate_compare.log"
+                threads: config["compare"]["threads"]
+                shell:
+                        """
+                        funannotate compare --cpus {threads} --num_orthos {params.num_orthos} --ml_method {params.ml_method} -i {input.folders} >& {log}
+                        cp -r funannotate_compare results/
+                        cp funannotate_compare.tar.gz results/
+                        rm -rf funannotate_compare
+			rm funannotate_compare.tar.gz
+			touch {output.checkpoint}
+                        """	
+else:
+	rule compare:
+		input:
+			checkpoint=expand("results/{sam}/{sam}_annotate.done", sam=sample_data.index.tolist()),
+			folders = expand("results/{species_name}/{preddir}_preds", zip, species_name=species_names, preddir=preddirs) 
+		output:
+			checkpoint = "results/funannotate_compare.done",
+			dir = directory("results/funannotate_compare/")
+		params:
+			samples = expand("results/{sam}", sam=sample_data["contig_prefix"].tolist()),
+			num_orthos = config["compare"]["num_orthos"],
+			ml_method = config["compare"]["ml_method"]
+		singularity:
+			"docker://reslp/funannotate:experimental"
+		log:
+			"log/funannotate_compare.log"
+		threads: config["compare"]["threads"]
+		shell:
+			"""
+			funannotate compare --cpus {threads} --num_orthos {params.num_orthos} --ml_method {params.ml_method} -i {input.folders} >& {log}
+			cp -r funannotate_compare results/
+                        cp funannotate_compare.tar.gz results/
+                        rm -rf funannotate_compare
+                        rm funannotate_compare.tar.gz
+			touch {output.checkpoint}
+			"""
+
+def get_ids_for_idsfile(wildcards):
+	prefix = sample_data["contig_prefix"].tolist()
+        species = sample_data["sample"].tolist()
+	ids = ""
+	for pre, sp in zip(prefix,species):
+		ids = ids + pre +"\t"+ sp + "\n" 
+	ids = ids.strip("\n")
+	return ids
+
+rule prepare_downstream_output:
+		input:
+			gff_files = expand("results/{sam}/{pref}_preds/annotate_results/{sam}.gff3", zip, sam=species_names, pref=preddirs),
+			protein_files = expand("results/{sam}/{pref}_preds/annotate_results/{sam}.proteins.fa", zip, sam=species_names, pref=preddirs),
+			transcript_files = expand("results/{sam}/{pref}_preds/annotate_results/{sam}.cds-transcripts.fa", zip, sam=species_names, pref=preddirs),
+			cazy_results = "results/funannotate_compare/cazy/CAZyme.all.results.csv",
+			cazy_summary_results = "results/funannotate_compare/cazy/CAZyme.summary.results.csv",
+			interproscan_results = "results/funannotate_compare/interpro/interproscan.results.csv",
+			pfam_results = "results/funannotate_compare/pfam/pfam.results.csv"
+		output:
+			combined_gff = "results/downstream/combined.gff",
+			combined_proteins = "results/downstream/combined_proteins.fa",
+			combined_transcripts = "results/downstream/combined_transcripts.fa",
+			cazy_results = "results/downstream/CAZyme.all.results.csv",
+			cazy_summary_results = "results/downstream/CAZyme.summary.results.csv",
+			interproscan_results = "results/downstream/interproscan.results.csv",
+			pfam_results = "results/downstream/pfam.results.csv",
+			ids = "results/downstream/ids.txt",
+			protein_files = directory("results/downstream/protein_files/"),
+			gff_files = directory("results/downstream/gff_files/")
+		params:
+			ids = get_ids_for_idsfile
+		shell:
+			"""
+			echo "##gff-version 3" > {output.combined_gff}
+			sed '/##gff-version 3/d'  {input.gff_files} >> {output.combined_gff}
+			cat {input.protein_files} > {output.combined_proteins}
+			cat {input.transcript_files} > {output.combined_transcripts}
+			cp {input.cazy_results} {output.cazy_results}
+			cp {input.cazy_summary_results} {output.cazy_summary_results}
+			cp {input.interproscan_results} {output.interproscan_results}
+			cp {input.pfam_results} {output.pfam_results}
+			mkdir -p {output.gff_files}
+			cp {input.gff_files} {output.gff_files}
+			mkdir -p {output.protein_files}
+			cp {input.protein_files} {output.protein_files}
+			echo "{params.ids}" > {output.ids}
+			"""
+	
