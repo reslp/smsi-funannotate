@@ -18,6 +18,12 @@ To make it work, a few things net to be setup beforehand:
 
 <img src="https://github.com/reslp/smsi_funannotate/blob/master/rulegraph.png" eight="500">
 
+## Issues:
+- Sauron: There is a strange issue with ReapeatMasker. For some reason it does not run. ReapearMasking with TanTan works fine.
+- Sauron: I have had many jobs failing due to a singularity error: `FATAL:   container creation failed: failed to resolved session directory`. This does not occur on VSC. From the extended message: `Activating singularity image /cl_tmp/reslph/projects/xylographa_fun/.snakemake/singularity/195cc8bdbe1d3f304062822f8f4f06ce.simg
+FATAL:   container creation failed: failed to resolved session directory /usertmp/singularity/mnt/session: lstat /tmp/singularity: no such file or directory` I assume it has to do with the tmp directory not being present. I have seen this after the jobs have been in the queue for a week (and other jobs ran fine). Maybe the /tmp directory is automatically deleted from time to time which causes this error.
+
+
 ## **Setup of funannotate database**
 
 For the database setup, it is necessary to bind the external database directory into the container to the correct mountpint. I singularity like this:
