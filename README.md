@@ -23,7 +23,6 @@ To make it work, a few things net to be setup beforehand:
 - Sauron: I have had many jobs failing due to a singularity error: `FATAL:   container creation failed: failed to resolved session directory`. This does not occur on VSC. From the extended message: `Activating singularity image /cl_tmp/reslph/projects/xylographa_fun/.snakemake/singularity/195cc8bdbe1d3f304062822f8f4f06ce.simg
 FATAL:   container creation failed: failed to resolved session directory /usertmp/singularity/mnt/session: lstat /tmp/singularity: no such file or directory` I assume it has to do with the tmp directory not being present. I have seen this after the jobs have been in the queue for a week (and other jobs ran fine). Maybe the /tmp directory is automatically deleted from time to time which causes this error.
 
-
 ## **Setup of funannotate database**
 
 For the database setup, it is necessary to bind the external database directory into the container to the correct mountpint. I singularity like this:
@@ -72,6 +71,25 @@ Tested with Version 5.39-77.0
 ### Signal-P:
 
 Download Signal-P from [services.healthtech.dtu.dk/service.php?SignalP-5.0](https://services.healthtech.dtu.dk/service.php?SignalP-5.0). Place it in the folder data/external/signalp-4.1. Make sure the path in the Snakefile points to the correct directory. 
+You also need to change the `signalp` script to point to the correct directory. It should look like this:
+
+```
+###############################################################################
+#               GENERAL SETTINGS: CUSTOMIZE TO YOUR SITE
+###############################################################################
+
+# full path to the signalp-4.1 directory on your system (mandatory)
+BEGIN {
+    $ENV{SIGNALP} = '/data/external/signalp-4.1';
+}
+
+# determine where to store temporary files (must be writable to all users)
+my $outputDir = "/tmp";
+
+# max number of sequences per run (any number can be handled)
+my $MAX_ALLOWED_ENTRIES=100000;
+```
+
 
 Tested with Version 4.1
 
