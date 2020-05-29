@@ -11,3 +11,10 @@ data/assemblies
 .gm_key
 *.sif
 *.log
+.cache/
+NOTES
+data/genbank_template.txt
+excluded_species/
+report.html
+test.txt
+.gitignore.swp
