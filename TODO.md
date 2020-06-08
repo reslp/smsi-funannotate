@@ -1,0 +1,1 @@
+- Check if names are unique, this is important for funannotate compare and probably also relevant in general.
