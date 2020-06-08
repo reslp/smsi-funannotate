@@ -1,4 +1,4 @@
-# A containerized snakemake funannotate pipeline 
+# A containerized genome annotation pipeline using snakemake, singularity, funannotate and MAKER
 
 funannotate -> snakemake -> singularity
 
