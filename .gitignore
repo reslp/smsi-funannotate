@@ -1,14 +1,14 @@
 .snakemake/
-data/external/
+data/external/*
 !data/external/.gitkeep
-data/database/
+data/database/*
 !data/database/.gitkeep
 .DS_Store
 results/
 log/
 data/eggnogdb
 data/RepeatMaskerLibraries
-data/assemblies
+data/assemblies/*
 data/assemblies/.gitkeep
 .interproscan-5/
 .gm_key
