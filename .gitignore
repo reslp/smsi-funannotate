@@ -9,7 +9,7 @@ log/
 data/eggnogdb
 data/RepeatMaskerLibraries
 data/assemblies/*
-data/assemblies/.gitkeep
+!data/assemblies/.gitkeep
 .interproscan-5/
 .gm_key
 *.sif
