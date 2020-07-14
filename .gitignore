@@ -21,3 +21,4 @@ excluded_species/
 report.html
 test.txt
 .gitignore.swp
+.gm_key_old

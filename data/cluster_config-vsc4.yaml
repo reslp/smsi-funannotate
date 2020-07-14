@@ -1,10 +1,11 @@
 __default__:
    time: "72:00:00"
    ntasks: 1
-   N: 1
+   n: 1
    J: default
-   ntasks-per-node: 1
+   cpus-per-task: 4
    hint: nomultithread
+   mem: 10G
    partition: mem_0096 
    qos: mem_0096
    output: $(pwd)/log/slurm-%j.out
@@ -18,26 +19,37 @@ sort:
 mask:
    J: mask
    hint: multithread
-   ntasks-per-node: 96 
+   cpus-per-task: 48
+   mem: 48G
 predict:
    J: pred
    hint: multithread
-   ntasks-per-node: 48
+   cpus-per-task: 48
+   mem: 48G
 iprscan:
    J: ipr
    hint: multithread
-   ntasks-per-node: 48
+   cpus-per-task: 48
+   mem: 48G
 remote:
    J: rem
 eggnog:
    J: egg
    hint: multithread
-   ntasks-per-node: 48
+   cpus-per-task: 48
+   mem: 48G
 annotate:
    J: anno
    hint: multithread
-   ntasks-per-node: 48
+   cpus-per-task: 48
+   mem: 48G
 compare:
    J: compare
    hint: multithread
-   ntasks-per-node: 48
+   cpus-per-task: 48
+   mem: 96G
+tarpredict:
+   J: tarpred
+   mem: 24G
+   hint: nomultithread 
+

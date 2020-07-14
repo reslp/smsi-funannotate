@@ -10,9 +10,12 @@ rule mask:
 	threads: config["mask"]["threads"]
 	shell:
 		"""
-		if [[ "{params.premasked}" == "yes" ]]; then
+		if [[ "{params.premasked}" == "yes" ]]; then # yes means assembly is premasked
 			cp {input.assembly} {output}
-		else
+		elif [[ "{params.premasked}" == "tantan" ]]; then # means that tantan should be used to mask the genome
+			cd results/{params.folder}
+			funannotate mask -i ../../{input.assembly} -o ../../{output} -m tantan --cpus {threads}
+		else # use repeatmasker or rather the method specified in config file to mask
 			cd results/{params.folder}
 			funannotate mask -i ../../{input.assembly} -o ../../{output} -m {params.method} --cpus {threads}
 		fi
