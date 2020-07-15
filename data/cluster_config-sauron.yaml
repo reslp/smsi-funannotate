@@ -2,39 +2,46 @@ __default__:
    ntasks: 1
    N: default
    queue: mpi
-   mem: 96G
+   mem: 10G
    output: $(pwd)/log/sauron-%j.out
    error: $(pwd)/log/sauron-%j.err
 clean:
-   hint: nomultithread
-   N: clean 
+   N: clean
+   ntasks: 4 
 sort:
    N: sort
+   ntasks: 4
 mask:
    N: mask
    hint: multithread
+   mem: 48G
    ntasks: 16 
 predict:
    N: pred
    hint: multithread
+   mem: 24G
    ntasks: 16
 iprscan:
    N: ipr
    hint: multithread
+   mem: 24G
    ntasks: 16
 remote:
    N: rem
 eggnog:
    N: egg
    hint: multithread
+   mem: 24G
    ntasks: 16
 annotate:
    N: anno
    hint: multithread
+   mem: 64G
    ntasks: 16
 compare:
    N: compare
    hint: multithread
+   mem: 64G
    ntasks: 16
 tarpredict:
    N: tarpred
