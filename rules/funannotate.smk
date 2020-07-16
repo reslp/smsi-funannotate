@@ -81,6 +81,7 @@ rule iprscan:
 	shell:
 		"""
 		cd results/{params.folder}
+		mkdir -p {params.pred_folder}_preds/annotate_misc
 		#funannotate iprscan --iprscan_path /data/external/interproscan-5.33-72.0/interproscan.sh -i ../../results/{params.folder}/{params.pred_folder}_preds -m local -c 2 >& ../../{log}
 		/data/external/interproscan-5.39-77.0/interproscan.sh -i ../../results/{params.folder}/{params.pred_folder}_preds/predict_results/{params.folder}.proteins.fa -o ../../results/{params.folder}/{params.pred_folder}_preds/annotate_misc/iprscan.xml -f XML -goterms -pa >& ../../{log}
 		touch ../../{output}
