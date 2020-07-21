@@ -132,7 +132,8 @@ rule annotate:
 		"results/{sample}/{sample}_annotate.done"
 	params:
 		folder="{sample}",
-		pred_folder=get_contig_prefix
+		pred_folder=get_contig_prefix,
+		buscodb=config["annotate"]["buscodb"]
 	log:
 		"log/{sample}_annotate.log"
 	threads: config["annotate"]["threads"]
@@ -140,7 +141,7 @@ rule annotate:
 		"""
 		cd results/{params.folder}
 		touch ../../{output}
-		funannotate annotate -i {params.pred_folder}_preds --sbt ../../data/genbank_template.txt --eggnog {params.pred_folder}_preds/eggnog_results.emapper.annotations --busco_db metazoa --cpus {threads} >& ../../{log}
+		funannotate annotate -i {params.pred_folder}_preds --sbt ../../data/genbank_template.txt --eggnog {params.pred_folder}_preds/eggnog_results.emapper.annotations --busco_db {params.buscodb} --cpus {threads} >& ../../{log}
 		#funannotate annotate -i {params.pred_folder}_preds --sbt ../../data/genbank_template.txt --cpus {threads} >& ../../{log}
 		"""
 
