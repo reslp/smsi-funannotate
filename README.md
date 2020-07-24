@@ -19,8 +19,8 @@ To make it work, a few things net to be setup beforehand:
 <img src="https://github.com/reslp/smsi_funannotate/blob/master/rulegraph.png" eight="500">
 
 ## There are some issues which are specific for the respective clusters:
-- Sauron: There is a strange issue with ReapeatMasker. For some reason it does not run. ReapeatMasking with TanTan works fine.
-- Sauron: I have had many jobs failing due to a singularity error: `FATAL:   container creation failed: failed to resolved session directory`. This does not occur on VSC. From the extended message: `Activating singularity image /cl_tmp/reslph/projects/xylographa_fun/.snakemake/singularity/195cc8bdbe1d3f304062822f8f4f06ce.simg
+- Sauron (SGE): There is a strange issue with ReapeatMasker. For some reason it does not run. ReapeatMasking with TanTan works fine.
+- Sauron (SGE): I have had many jobs failing due to a singularity error: `FATAL:   container creation failed: failed to resolved session directory`. This does not occur on VSC. From the extended message: `Activating singularity image /cl_tmp/reslph/projects/xylographa_fun/.snakemake/singularity/195cc8bdbe1d3f304062822f8f4f06ce.simg
 FATAL:   container creation failed: failed to resolved session directory /usertmp/singularity/mnt/session: lstat /tmp/singularity: no such file or directory` I assume it has to do with the tmp directory not being present. I have seen this after the jobs have been in the queue for a week (and other jobs ran fine). Maybe the /tmp directory is automatically deleted from time to time which causes this error.
 
 ## **Pipeline setup and configuration**
@@ -81,7 +81,7 @@ Tested with Version 4.
 
 Download interproscan from [www.ebi.ac.uk/interpro/download/](https://www.ebi.ac.uk/interpro/download/). Place it in the folder data/external/interproscan-versionXXX. Make sure the path in the Snakefile points to the correct directory. InterProScan is frequently updated and your version could be different from the one specifid in the Snakefile.
 
-IMPORTANT: Newer version os Interproscan are not compatible with funannotate <1.7.3.
+IMPORTANT: Newer version of Interproscan are not compatible with funannotate <1.7.3.
 
 Tested with Version 5.39-77.0
 
@@ -125,7 +125,7 @@ In the context of the pipeline this needs to be handled by the submission script
 
 First make sure that your data.csv file is set up correctly. Review the provided example.
 
-Make sure to configure the cluster parameters currectly (max_walltime, qos, etc.). This can be very different from the example provided in the data directory.
+Make sure to configure the cluster parameters correctly (max_walltime, qos, etc.). This can be very different from the example provided in the data directory.
 
 
 Get a personalized GenBank template [https://submit.ncbi.nlm.nih.gov/genbank/template/submission/](https://submit.ncbi.nlm.nih.gov/genbank/template/submission/) and place it in data/genbank_template.txt. 
