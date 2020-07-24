@@ -120,21 +120,21 @@ The RepBase repeat library has become prorietory. By default the funannotate con
 
 In the context of the pipeline this needs to be handled by the submission script `submit.sh`. Look there to see how to add this correctly. I usually keep a symlink of that directory in my data folder and bindmount the symlink. This is how this looks in my data directory:
 ```
-drwxr-xr-x  5 reslph domain_users   15 21. Jul 10:36 .
-drwxr-xr-x 12 reslph domain_users   30 24. Jul 21:02 ..
-drwxr-xr-x  3 reslph domain_users   96 15. Jul 11:53 assemblies
--rw-r--r--  1 reslph domain_users  645 15. Jul 12:22 cluster_config-sauron.yaml
--rw-r--r--  1 reslph domain_users  838 15. Jul 11:42 cluster_config-vsc4.yaml
--rw-r--r--  1 reslph domain_users  438 17. Apr 08:42 cluster_config.yaml
--rw-r--r--  1 reslph domain_users  783 21. Jul 10:36 config.yaml
--rw-r--r--  1 reslph domain_users 8,5K 17. Apr 08:42 data_bak.csv
-drwxr-xr-x  6 reslph domain_users   40 15. Jul 11:42 database
--rw-r--r--  1 reslph domain_users 9,6K 16. Jul 09:57 data.csv
--rw-r--r--  1 reslph domain_users  395 15. Jul 11:42 data_test.csv
-lrwxrwxrwx  1 reslph domain_users   34 17. Apr 09:30 eggnogdb -> /cl_tmp/reslph/databases/eggnogdb/
-drwxr-xr-x  8 reslph domain_users   10 15. Jul 11:42 external
--rw-r--r--  1 reslph domain_users 1,6K 21. Jul 09:47 genbank_template.txt
-lrwxrwxrwx  1 reslph domain_users   48 17. Apr 09:31 RepeatMaskerLibraries -> /cl_tmp/reslph/databases/RepeatMasker/Libraries/
+drwxr-xr-x  5 reslp domainusers   15 21. Jul 10:36 .
+drwxr-xr-x 12 reslp domainusers   30 24. Jul 21:02 ..
+drwxr-xr-x  3 reslp domainusers   96 15. Jul 11:53 assemblies
+-rw-r--r--  1 reslp domainusers  645 15. Jul 12:22 cluster_config-sauron.yaml
+-rw-r--r--  1 reslp domainusers  838 15. Jul 11:42 cluster_config-vsc4.yaml
+-rw-r--r--  1 reslp domainusers  438 17. Apr 08:42 cluster_config.yaml
+-rw-r--r--  1 reslp domainusers  783 21. Jul 10:36 config.yaml
+-rw-r--r--  1 reslp domainusers 8,5K 17. Apr 08:42 data_bak.csv
+drwxr-xr-x  6 reslp domainusers   40 15. Jul 11:42 database
+-rw-r--r--  1 reslp domainusers 9,6K 16. Jul 09:57 data.csv
+-rw-r--r--  1 reslp domainusers  395 15. Jul 11:42 data_test.csv
+lrwxrwxrwx  1 reslp domainusers   34 17. Apr 09:30 eggnogdb -> /cl_tmp/reslph/databases/eggnogdb/
+drwxr-xr-x  8 reslp domainusers   10 15. Jul 11:42 external
+-rw-r--r--  1 reslp domainusers 1,6K 21. Jul 09:47 genbank_template.txt
+lrwxrwxrwx  1 reslp domainusers   48 17. Apr 09:31 RepeatMaskerLibraries -> /cl_tmp/reslph/databases/RepeatMasker/Libraries/
 ```
 
 ### 4. Preparing data files and specific setting
