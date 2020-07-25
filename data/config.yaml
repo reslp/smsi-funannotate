@@ -1,6 +1,10 @@
 samples: "data/data.csv"
+
+# in this next section different parts of the pipeline can be customized
 clean:
         minlen: 5000
+
+# as for repeatmasking this is only the default value. You can customize this in the csv file specifying the samples
 mask:
         method: "repeatmasker"
         threads: 48
@@ -10,9 +14,11 @@ predict:
         ploidy: 1
         busco_db: "dikarya"
         threads: 48
+
+# change the a working email address here. You will receive notification emails from AntiSMASH
 remote:
         methods: "all"
-        email: "philipp.resl@uni-graz.at"
+        email: "your@email.com"
 eggnog:
         threads: 48
 annotate:

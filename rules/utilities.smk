@@ -1,6 +1,5 @@
 # useful variable definition:
 WD=os.getcwd()
-email="put_your_email_here"
 
 #sample_data = pd.read_table(config["samples"]).set_index("sample", drop=False)
 def get_assembly_path(wildcards):
