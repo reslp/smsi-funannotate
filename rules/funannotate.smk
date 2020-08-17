@@ -40,6 +40,9 @@ rule predict:
 	threads: config["predict"]["threads"] 
 	shell:
 		"""
+		# this is added to prevent tRNAscan from failing
+		export TMPDIR="$(pwd)/tmp"
+
 		if [[ ! -d results/{params.folder} ]]
 		then
 			mkdir results/{params.folder}

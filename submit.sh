@@ -50,6 +50,14 @@ else
 	command -v sbatch >/dev/null 2>&1 && { echo >&2 "SLURM detected, will use sbatch to submit jobs."; CLUSTER="slurm"; }
 fi
 
+
+# It may depend on the cluster which singularity flags are needed.
+# e.g. in sauron the pipeline fails to detect tRNAs becase tRNAScan fails because /usertmp is not writable
+# this is also true if a directory is mounted as /tmp oder /usertmp. It might be because python internally writes to (system?) /tmp
+# also --writable-tmpfs option of singularity does not work
+# the solution is to set the TMPDIR variable to a different place, here it is set to $(pwd)/tmp. Then tRNAscan seems to run fine.
+# Currently this variable is only set inside the rule predict, because this is the rule which had problems.
+
 if [ $CLUSTER = "slurm" ]; then
         export CONDA_PKGS_DIRS="$(pwd)/.conda_pkg_tmp"
         mkdir -p .conda_pkg_tmp
