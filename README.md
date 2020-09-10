@@ -40,7 +40,7 @@ git clone https://github.com/reslp/smsi-funannotate.git
 Funannotate requires a database containing things like BUSCO sets, PFAM information, data from dbcan etc. To setup the database, it is necessary to bind the external database directory into the container to the correct mountpoint. Run this command inside the just cloned github directory:
 
 ```
-singularity shell docker://reslp/funannotate:1.7.4 -B $(pwd)/data/external:/data/database
+singularity shell -B $(pwd)/data/database:/data/database docker://reslp/funannotate:1.7.4
 ```
 
 You will end up inside the container. To setup and check the funannotate database run these two commands inside the container:
