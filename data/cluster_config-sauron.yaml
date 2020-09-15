@@ -5,6 +5,7 @@ __default__:
    mem: 10G
    output: $(pwd)/log/sauron-%j.out
    error: $(pwd)/log/sauron-%j.err
+   pe: mpi1node
 clean:
    N: clean
    ntasks: 4 
@@ -14,34 +15,34 @@ sort:
 mask:
    N: mask
    hint: multithread
-   mem: 48G
+   mem: 4G
    ntasks: 16 
 predict:
    N: pred
    hint: multithread
-   mem: 24G
+   mem: 2G
    ntasks: 16
 iprscan:
    N: ipr
    hint: multithread
-   mem: 24G
+   mem: 4G
    ntasks: 16
 remote:
    N: rem
 eggnog:
    N: egg
    hint: multithread
-   mem: 24G
+   mem: 4G
    ntasks: 16
 annotate:
    N: anno
    hint: multithread
-   mem: 64G
+   mem: 8G
    ntasks: 16
 compare:
    N: compare
    hint: multithread
-   mem: 64G
+   mem: 8G
    ntasks: 16
 tarpredict:
    N: tarpred
