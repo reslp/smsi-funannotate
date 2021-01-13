@@ -1,4 +1,4 @@
-singularity: "docker://reslp/funannotate:1.7.4"
+singularity: "docker://reslp/funannotate:1.8.3"
 
 import pandas as pd
 import os
