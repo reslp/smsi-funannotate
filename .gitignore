@@ -23,5 +23,6 @@ test.txt
 .gitignore.swp
 .gm_key_old
 submission_log_17072020.txt
-
+tmp/
+!tmp/.gitkeep
 results_save_no_tRNAs/
