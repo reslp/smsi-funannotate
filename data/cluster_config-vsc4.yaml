@@ -3,7 +3,6 @@ __default__:
    ntasks: 1
    n: 1
    J: default
-   cpus-per-task: 4
    hint: nomultithread
    mem: 10G
    partition: mem_0096 
@@ -26,11 +25,13 @@ predict:
    hint: multithread
    cpus-per-task: 48
    mem: 48G
+split_proteins:
+   J: splt
 iprscan:
    J: ipr
    hint: multithread
-   cpus-per-task: 48
-   mem: 48G
+   ntasks-per-node: 16
+   mem: 32G
 remote:
    J: rem
 eggnog:

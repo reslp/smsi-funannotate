@@ -69,11 +69,26 @@ rule tarpredict:
 		tar -cvf busco_proteins.tar busco_proteins && rm -r busco_proteins
 		tar -cvf EVM.tar EVM && rm -r EVM
 		touch ../../../../{output}
-		"""		
+		"""
+
+rule split_proteins:
+	input: rules.predict.output
+	output: "results/{sample}/{sample}_split_proteins.done"
+	params:
+		folder = "{sample}",
+		pred_folder=get_contig_prefix,
+		nrecords=500
+	singularity: "docker://reslp/biopython_plus:1.77"
+	log: "log/{sample}_split_proteins.log"
+	shell:
+		"""
+		bin/split_fasta.py --fasta results/{params.folder}/{params.pred_folder}_preds/predict_results/{params.folder}.proteins.fa --outdir results/{params.folder}/{params.pred_folder}_preds/predict_results/protein_chunks/ --n_records {params.nrecords} &> {log}
+		touch {output}
+		"""
+		
 rule iprscan:
 	input:
-		rules.predict.output
-
+		rules.split_proteins.output
 	output:
 		"results/{sample}/{sample}_iprscan.done"
 	params:
@@ -82,15 +97,20 @@ rule iprscan:
 	log:
 		"log/{sample}_ipscan.log"
 	singularity: "docker://reslp/interproscan-wrapper:5.48-83.0"
-	threads: 16
+	threads: 12
 	shell:
 		"""
-		cd results/{params.folder}
-		mkdir -p {params.pred_folder}_preds/annotate_misc
-		#funannotate iprscan --iprscan_path /data/external/interproscan-5.33-72.0/interproscan.sh -i ../../results/{params.folder}/{params.pred_folder}_preds -m local -c 2 >& ../../{log}
-		/data/external/interproscan-5.48-83.0/interproscan.sh -cpu {threads} -T $(pwd)/interpro_tmp -i ../../results/{params.folder}/{params.pred_folder}_preds/predict_results/{params.folder}.proteins.fa -o ../../results/{params.folder}/{params.pred_folder}_preds/annotate_misc/iprscan.xml -f XML -goterms -pa >& ../../{log}
-		rm -rf $(pwd)/interpro_tmp
-		touch ../../{output}
+		#cd results/{params.folder}
+		mkdir -p results/{params.folder}/{params.pred_folder}_preds/annotate_misc
+		#funannotate iprscan --iprscan_path /data/external/interproscan-5.48-83.0/interproscan.sh -i ../../results/{params.folder}/{params.pred_folder}_preds -m local -c 16 --cpus_per_chunk 4 >& ../../{log}
+		for f in $(ls results/{params.folder}/{params.pred_folder}_preds/predict_results/protein_chunks);
+			do
+				echo "Working on file: "$f > {log}
+				/data/external/interproscan-5.48-83.0/interproscan.sh -cpu {threads} -i results/{params.folder}/{params.pred_folder}_preds/predict_results/protein_chunks/$f -o results/{params.folder}/{params.pred_folder}_preds/annotate_misc/"$f"_ipr.xml -f XML -goterms -pa >& {log}
+				rm -rf $(pwd)/interpro_tmp
+			done
+		cat results/{params.folder}/{params.pred_folder}_preds/annotate_misc/*_ipr.xml > results/{params.folder}/{params.pred_folder}_preds/annotate_misc/iprscan.xml
+		touch {output}
 		"""
 rule remote:
 	input:

@@ -22,6 +22,8 @@ predict:
    hint: multithread
    mem: 2G
    ntasks: 16
+split_proteins:
+   N: splt
 iprscan:
    N: ipr
    hint: multithread
