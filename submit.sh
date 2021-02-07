@@ -20,7 +20,7 @@ version() {
         exit 0
 }
 
-while getopts ":v:t:c:s:" option;
+while getopts ":v:t:c:s:i:" option;
         do
                 case "${option}"
                 in
