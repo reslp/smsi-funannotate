@@ -105,8 +105,8 @@ rule iprscan:
 		#funannotate iprscan --iprscan_path /data/external/interproscan-5.48-83.0/interproscan.sh -i ../../results/{params.folder}/{params.pred_folder}_preds -m local -c 16 --cpus_per_chunk 4 >& ../../{log}
 		for f in $(ls results/{params.folder}/{params.pred_folder}_preds/predict_results/protein_chunks);
 			do
-				echo "Working on file: "$f > {log}
-				/data/external/interproscan-5.48-83.0/interproscan.sh -cpu {threads} -i results/{params.folder}/{params.pred_folder}_preds/predict_results/protein_chunks/$f -o results/{params.folder}/{params.pred_folder}_preds/annotate_misc/"$f"_ipr.xml -f XML -goterms -pa >& {log}
+				echo "Working on file: "$f >> {log}
+				/data/external/interproscan-5.48-83.0/interproscan.sh -cpu {threads} -i results/{params.folder}/{params.pred_folder}_preds/predict_results/protein_chunks/$f -o results/{params.folder}/{params.pred_folder}_preds/annotate_misc/"$f"_ipr.xml -f XML -goterms -pa 2>&1 >> {log}
 				rm -rf $(pwd)/interpro_tmp
 			done
 		cat results/{params.folder}/{params.pred_folder}_preds/annotate_misc/*_ipr.xml > results/{params.folder}/{params.pred_folder}_preds/annotate_misc/iprscan.xml
@@ -124,6 +124,7 @@ rule remote:
 		email = config["remote"]["email"]
 	log:
 		"log/{sample}_remote.log"
+	singularity: "docker://reslp/funannotate:1.8.3_antismashV6"
 	shell:
 		"""
 		cd results/{params.folder}
@@ -163,6 +164,7 @@ rule annotate:
 	log:
 		"log/{sample}_annotate.log"
 	threads: config["annotate"]["threads"]
+	singularity: "docker://reslp/funannotate:1.8.3_fasta2agp_fix"
 	shell:
 		"""
 		cd results/{params.folder}
@@ -213,7 +215,7 @@ else:
 			num_orthos = config["compare"]["num_orthos"],
 			ml_method = config["compare"]["ml_method"]
 		singularity:
-			"docker://reslp/funannotate:experimental"
+			"docker://reslp/funannotate:1.8.3"
 		log:
 			"log/funannotate_compare.log"
 		threads: config["compare"]["threads"]
