@@ -109,7 +109,8 @@ rule iprscan:
 				/data/external/interproscan-5.48-83.0/interproscan.sh -cpu {threads} -i results/{params.folder}/{params.pred_folder}_preds/predict_results/protein_chunks/$f -o results/{params.folder}/{params.pred_folder}_preds/annotate_misc/"$f"_ipr.xml -f XML -goterms -pa 2>&1 >> {log}
 				rm -rf $(pwd)/interpro_tmp
 			done
-		cat results/{params.folder}/{params.pred_folder}_preds/annotate_misc/*_ipr.xml > results/{params.folder}/{params.pred_folder}_preds/annotate_misc/iprscan.xml
+		#this does not work!
+		#cat results/{params.folder}/{params.pred_folder}_preds/annotate_misc/*_ipr.xml > results/{params.folder}/{params.pred_folder}_preds/annotate_misc/iprscan.xml
 		touch {output}
 		"""
 rule remote:
