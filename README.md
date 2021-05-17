@@ -18,7 +18,7 @@ To make it work, a few things net to be setup beforehand:
 
 <img src="https://github.com/reslp/smsi_funannotate/blob/master/rulegraph.png" eight="500">
 
-## There are some issues which are specific for the respective clusters:
+## There are some specific issues on different clusters:
 - Sauron (SGE): There is a strange issue with ReapeatMasker. For some reason it does not run. ReapeatMasking with TanTan works fine.
 - Sauron (SGE): I have had many jobs failing due to a singularity error: `FATAL:   container creation failed: failed to resolved session directory`. This does not occur on VSC. From the extended message: `Activating singularity image /cl_tmp/reslph/projects/xylographa_fun/.snakemake/singularity/195cc8bdbe1d3f304062822f8f4f06ce.simg
 FATAL:   container creation failed: failed to resolved session directory /usertmp/singularity/mnt/session: lstat /tmp/singularity: no such file or directory` I assume it has to do with the tmp directory not being present. I have seen this after the jobs have been in the queue for a week (and other jobs ran fine). Maybe the /tmp directory is automatically deleted from time to time which causes this error.
@@ -40,7 +40,7 @@ git clone https://github.com/reslp/smsi-funannotate.git
 Funannotate requires a database containing things like BUSCO sets, PFAM information, data from dbcan etc. To setup the database, it is necessary to bind the external database directory into the container to the correct mountpoint. Run this command inside the just cloned github directory:
 
 ```
-singularity shell -B $(pwd)/data/database:/data/database docker://reslp/funannotate:1.7.4
+singularity shell -B $(pwd)/data/database:/data/database docker://reslp/funannotate:1.8.7
 ```
 
 You will end up inside the container. To setup and check the funannotate database run these two commands inside the container:
