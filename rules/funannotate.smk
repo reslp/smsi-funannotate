@@ -125,7 +125,7 @@ rule remote:
 		email = config["remote"]["email"]
 	log:
 		"log/{sample}_remote.log"
-	singularity: "docker://reslp/funannotate:1.8.3_antismashV6"
+	#singularity: "docker://reslp/funannotate:1.8.3_antismashV6"
 	shell:
 		"""
 		cd results/{params.folder}
@@ -165,7 +165,7 @@ rule annotate:
 	log:
 		"log/{sample}_annotate.log"
 	threads: config["annotate"]["threads"]
-	singularity: "docker://reslp/funannotate:1.8.3_fasta2agp_fix"
+	#singularity: "docker://reslp/funannotate:1.8.3_fasta2agp_fix"
 	shell:
 		"""
 		cd results/{params.folder}
@@ -190,7 +190,7 @@ if config["compare"]["phylogeny"] == "yes" or config["compare"]["histograms"] ==
                         num_orthos = config["compare"]["num_orthos"],
                         ml_method = config["compare"]["ml_method"]
                 singularity:
-                        "docker://reslp/funannotate:1.7.2"
+                        "docker://reslp/funannotate:1.8.7"
                 log:
                         "log/funannotate_compare.log"
                 threads: config["compare"]["threads"]
@@ -216,7 +216,7 @@ else:
 			num_orthos = config["compare"]["num_orthos"],
 			ml_method = config["compare"]["ml_method"]
 		singularity:
-			"docker://reslp/funannotate:1.8.3"
+			"docker://reslp/funannotate:1.8.7"
 		log:
 			"log/funannotate_compare.log"
 		threads: config["compare"]["threads"]
